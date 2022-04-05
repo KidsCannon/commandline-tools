@@ -1,4 +1,4 @@
-# Tools
+# CommandLine Tools
 
 ## REQUIREMENTS
 
@@ -14,7 +14,7 @@ clone repository:
 
 
 ```
-$ git clone https://github.com/KidsCannon/tools.git $HOME/.k8n/tools
+$ git clone https://github.com/KidsCannon/commandline-tools.git $HOME/.k8n/tools
 ```
 
 add to your shell rc file. (.bashrc, .zshrc etc):
