@@ -1,0 +1,19 @@
+#!/bin/sh
+
+if [ -z "$CLOUDFLARE_EMAIL" ]; then
+  echo "CLOUDFLARE_EMAIL is required"
+  exit 2
+fi
+if [ -z "$CLOUDFLARE_API_KEY" ]; then
+  echo "CLOUDFLARE_API_KEY is required"
+  exit 2
+fi
+if [ -z "$1" ]; then
+  echo '$1 (zone_id) is required'
+  exit 2
+fi
+
+curl -X GET "https://api.cloudflare.com/client/v4/zones/$1/dns_records" \
+  -H "X-Auth-Email: $CLOUDFLARE_EMAIL" \
+  -H "X-Auth-Key: $CLOUDFLARE_API_KEY" \
+  -H "Content-Type: application/json"

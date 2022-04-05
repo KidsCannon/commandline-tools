@@ -1,0 +1,15 @@
+#!/bin/bash
+
+interval=0.3
+
+echo "start monitoring. interval=${interval}s"
+prev=
+while true
+do
+  current="$("$@")"
+  if [ "$prev" != "$current" ]; then
+    echo "[$(date +'%T')] $current"
+  fi
+  prev=$current
+  sleep $interval
+done

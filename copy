@@ -1,0 +1,11 @@
+#!/bin/sh
+
+os_name=`uname | lowercase`
+case "${os_name}" in
+    darwin*)
+        pbcopy
+        ;;
+    linux*)
+        xsel --clipboard --input
+        ;;
+esac

@@ -1,0 +1,15 @@
+#!/bin/sh
+
+set -e
+
+NAME="$1:$2"
+
+echo Start waiting for "$NAME" >> /dev/stderr
+for _ in $(seq 1 10);
+do
+  nc -z "$1" "$2" && echo Success && exit 0
+  echo -n .
+  sleep 1
+done
+echo Failed waiting for "$NAME" >> /dev/stderr
+exit 1

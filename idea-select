@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -eo pipefail
+
+
+repo="$(select-ghq-list)"
+if [ -z "$repo" ]; then
+  exit 0
+fi
+idea "$repo"

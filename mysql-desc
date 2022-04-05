@@ -1,0 +1,12 @@
+#!/bin/sh
+
+database="$(echo 'SELECT SCHEMA_NAME FROM SCHEMATA' | mysql information_schema | tail -n +2 | peco)"
+if [ -z "$database" ]; then
+  exit 1
+fi
+table="$(echo 'SHOW TABLES' | mysql "$database" | tail -n +2 | peco)"
+if [ -z "$table" ]; then
+  exit 1
+fi
+
+echo "DESC $database.$table \G" | mysql "$database"

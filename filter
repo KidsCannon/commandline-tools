@@ -1,0 +1,10 @@
+#!/bin/sh
+
+if which fzf >/dev/null 2>&1; then
+  fzf "$@"
+elif which peco >/dev/null 2>&1; then
+  peco "$@"
+else
+  echo "fzf or peco is required" >> /dev/stderr
+  exit 2
+fi

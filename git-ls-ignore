@@ -1,0 +1,25 @@
+#!/bin/sh
+
+GITIGNOREPATH=`git rev-parse --show-toplevel `'/.gitignore'
+
+if [ $? -ne 0 ]
+then
+    exit $?
+fi
+
+if [ ! -f $GITIGNOREPATH ]
+then
+    echo $GITIGNOREPATH' does not exist.'
+    exit 1
+fi
+
+for indexed in `git ls-files`
+do
+    for ignored in `cat ${GITIGNOREPATH} | grep -v '^#'`
+    do
+        if [ `echo /${indexed} | grep -F ${ignored}` ]
+        then
+            echo $indexed
+        fi
+    done
+done

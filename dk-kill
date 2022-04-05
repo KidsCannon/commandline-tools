@@ -1,0 +1,6 @@
+#!/bin/sh
+
+CONTAINER_ID=$(select-docker-ps)
+if [ -n "$CONTAINER_ID" ]; then
+  docker kill "$CONTAINER_ID"
+fi
