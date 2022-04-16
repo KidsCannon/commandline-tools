@@ -14,11 +14,11 @@ clone repository:
 
 
 ```
-$ git clone https://github.com/KidsCannon/commandline-tools.git $HOME/.k8n/tools
+$ git clone https://github.com/KidsCannon/commandline-tools.git $HOME/.k8n/commandline-tools
 ```
 
 add to your shell rc file. (.bashrc, .zshrc etc):
 
 ```
-source $HOME/.k8n/tools/init.sh
+. $HOME/.k8n/commandline-tools/init.sh
 ```
