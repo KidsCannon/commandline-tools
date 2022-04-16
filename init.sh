@@ -1,1 +1,1 @@
-export PATH="$HOME/.k8n/tools:$PATH"
+export PATH="$HOME/.k8n/commandline-tools:$PATH"
