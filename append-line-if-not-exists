@@ -1,0 +1,15 @@
+#!/bin/sh
+
+set -e
+
+error_exit() {
+  echo "Usage: $ append-line-if-not-exists <line> <file>" >> /dev/stderr
+  exit 1
+}
+
+[ -z "$1" ] && error_exit
+[ -z "$2" ] && error_exit
+[ -f "$2" ] && error_exit
+
+grep -qxF "$1" "$2" || echo "$1" >> "$2"
+
