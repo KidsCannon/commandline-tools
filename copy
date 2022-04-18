@@ -6,6 +6,10 @@ case "${os_name}" in
         pbcopy
         ;;
     linux*)
-        xsel --clipboard --input
+        if [[ "$(uname -r)" == *microsoft* ]]; then
+            clip.exe
+        else
+            xsel --clipboard --input
+        fi
         ;;
 esac
