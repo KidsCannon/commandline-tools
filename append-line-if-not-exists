@@ -9,7 +9,7 @@ error_exit() {
 
 [ -z "$1" ] && error_exit
 [ -z "$2" ] && error_exit
-[ -f "$2" ] && error_exit
+[ ! -f "$2" ] && error_exit
 
 grep -qxF "$1" "$2" || echo "$1" >> "$2"
 
