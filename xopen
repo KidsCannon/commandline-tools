@@ -1,0 +1,15 @@
+#!/bin/sh
+
+# Usege: $ cat /tmp/url-list.txt | xargs -I{} xopen {}
+
+open=""
+
+if [ -n "$WSL_INTEROP" ]; then
+  open="/mnt/c/Program Files (x86)/Microsoft/Edge/Application/msedge.exe"
+elif command -v open >/dev/null 2>&1; then
+  open="xdg-open"
+else
+  open="open"
+fi
+
+"$open" $1
