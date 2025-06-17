@@ -1,0 +1,19 @@
+#!/bin/sh
+
+base="$1"
+head="$2"
+
+if [ -z "$base" ] || [ -z "$head" ]; then
+  echo "Usage: $0 <base> <head>"
+  echo "  Example: $0 dev main"
+  echo "  Example: $0 prod dev"
+  exit 1
+fi
+
+## TODO: dev -> prod の場合、dev に含まれる Release PR は無視したい
+
+date="$(date +"%Y/%m/%d")"
+git fetch origin
+gh pr create --title "${base^} Release $date" --base $base --head $head --body "## Merge commits ($base..$head)
+
+$(git log "origin/$base..origin/$head" --merges --oneline --format="%s")
