@@ -10,10 +10,10 @@ if [ -z "$base" ] || [ -z "$head" ]; then
   exit 1
 fi
 
-## TODO: dev -> prod の場合、dev に含まれる Release PR は無視したい
+## dev -> prod の場合、dev に含まれる Release PR はざっくり無視する
 
 date="$(date +"%Y/%m/%d")"
 git fetch origin
 gh pr create --title "${base^} Release $date" --base $base --head $head --body "## Merge commits ($base..$head)
 
-$(git log "origin/$base..origin/$head" --merges --oneline --format="%s")
+$(git log "origin/$base..origin/$head" --merges --format="%h___%s___%b" | grep -v "${head^} Release" | awk -F___ '{print $2}')"
