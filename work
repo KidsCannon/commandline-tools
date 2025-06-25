@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -e
+
+if [ -z "$1" ]; then
+  exit 1
+fi
+
+git worktree add ".git/works/$1"
+cursor ".git/works/$1"
