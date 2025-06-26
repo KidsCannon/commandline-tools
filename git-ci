@@ -1,0 +1,3 @@
+#!/bin/sh
+
+git commit -m "$(claude --model sonnet -p "Look at the staged git changes and create a summarizing git commit title. Only respond with the title and no affirmation.")"
