@@ -1,0 +1,3 @@
+#!/bin/sh
+
+claude --model sonnet -p "Stage and commit each uncommitted change after splitting it into the smallest change that logically makes sense as one. The output should be list of the commit messages you have created."
