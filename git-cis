@@ -1,3 +1,8 @@
 #!/bin/sh
 
-claude --model sonnet -p "Stage and commit each uncommitted change after splitting it into the smallest change that logically makes sense as one. The output should be list of the commit messages you have created."
+set -e
+
+git commit -a -m 'Temporary commit before git-cis'
+git reset HEAD^
+
+claude --model sonnet -p "Stage and commit each uncommitted change after splitting it into the smallest change that logically makes sense as one. Split up changes within a single file, if necessary. If you stash during the work process, clean up afterwards. The output consists of two sections. The first is the descending order of the titles of the commits created, and the second is the ascending order of the commands executed."
