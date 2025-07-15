@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -e
+
+path=$(which $1)
+file "$path"
+if file "$path" | grep -q "text"; then
+    echo
+    cat "$path"
+fi
