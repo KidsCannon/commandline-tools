@@ -1,15 +1,16 @@
 #!/bin/sh
 
-if [ -n "$DEBUG" ]; then
+if [ -z "$DEBUG" ]; then
   claude \
-    --debug \
     --permission-mode acceptEdits \
     --mcp-config ~/.config/ccapproval/mcp.json \
     --permission-prompt-tool mcp__ccapproval__tool-approval \
     -p "$@"
 else
   claude \
+    --debug \
     --permission-mode acceptEdits \
     --mcp-config ~/.config/ccapproval/mcp.debug.json \
-    --permission-prompt-tool mcp__ccapproval__tool-approval -p "$@"
+    --permission-prompt-tool mcp__ccapproval__tool-approval \
+    -p "$@"
 fi
