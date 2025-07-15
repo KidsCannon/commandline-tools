@@ -56,7 +56,7 @@ try {
 ${query.replace('ai:', '')}
 `
         const branch = execSync(`claude --model sonnet -p "${prompt}"`).toString().trim()
-        execSync(`git checkout -b ${branch}`)
+        execSync(`git checkout -b "${branch.trim()}"`)
       }
     }
   })
