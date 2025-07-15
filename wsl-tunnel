@@ -1,0 +1,80 @@
+#!/bin/sh
+
+set -Eeuo pipefail
+
+# Usage: wsl-tunnel <port> <protocol>
+#
+# Examples:
+#   $ wsl-tunnel 3000
+#   $ wsl-tunnel 4000 https
+#   $ wsl-tunnel 8081 expo
+
+port="$1"
+if [ -z "$port" ]; then
+  echo "Usage: $0 <port>"
+  exit 1
+fi
+
+protocol="${2:-}"
+if [ -z "$protocol" ]; then
+  case "$port" in
+    8081)
+      protocol="exp"
+      ;;
+    443)
+      protocol="https"
+      ;;
+    *)
+      protocol="http"
+      ;;
+  esac
+fi
+
+name="WSL $port"
+host_addr=$(ipconfig.exe | grep -A 10 'Ethernet adapter Ethernet' | grep IPv4 | awk '{ print $NF }' | sed -e 's/\r//g')
+mode=$(wslinfo --networking-mode)
+
+cleanup() {
+  retval=$?
+  trap - INT TERM QUIT EXIT
+  set +e
+  echo "Cleaning up..."
+  sudo.exe netsh.exe advfirewall firewall delete rule name="$name"
+  if [ "$mode" = "bridge" ]; then
+    sudo.exe netsh.exe interface portproxy delete v4tov4 listenaddress="$host_addr" listenport="$port"
+  fi
+  exit $retval
+}
+trap cleanup INT QUIT TERM EXIT
+
+
+case "$mode" in
+  "mirrored")
+    # noop
+    ;;
+  "nat")
+    wsl_addr=$(ip a show dev eth0 | grep 'inet ' | awk '{ print $2 }' | awk -F / '{ print $1 }')
+    sudo.exe netsh.exe interface portproxy add v4tov4 listenaddress="$host_addr" listenport="$port" connectaddress="$wsl_addr" connectport="$port"
+    ;;
+  *)
+    echo "Unsupported mode: $mode"
+    exit 1
+esac
+
+sudo.exe netsh.exe advfirewall firewall add rule name="$name" dir=in action=allow protocol=TCP localport="$port"
+
+url=""
+if [ "$protocol" = "http" ] && [ "$port" = "80" ]; then
+  url="http://$host_addr"
+elif [ "$protocol" = "https" ] && [ "$port" = "443" ]; then
+  url="https://$host_addr"
+else
+  url="$protocol://$host_addr:$port"
+fi
+
+echo ""
+echo "Waiting on $url"
+echo ""
+deno run npm:qrcode-terminal@latest "$url"
+
+sleep Infinity
