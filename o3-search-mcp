@@ -1,0 +1,10 @@
+#!/bin/sh
+
+set -e
+
+allowEnvs="OPENAI_API_KEY,OPENAI_BASE_URL,OPENAI_ORG_ID,OPENAI_PROJECT_ID,OPENAI_WEBHOOK_SECRET,OPENAI_LOG,SEARCH_CONTEXT_SIZE,REASONING_EFFORT"
+
+deno run \
+  --allow-env="$allowEnvs" \
+  --allow-net="api.openai.com:443" \
+  npm:o3-search-mcp@latest

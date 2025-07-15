@@ -1,0 +1,30 @@
+#!/bin/sh
+
+set -e
+
+# https://github.com/unjs/std-env/blob/7e8cb7b1000f313a03d7645c82e2d8608c250dd6/src/flags.ts
+allowEnvs="SHELL,DEBUG,TEST,MINIMAL,NO_COLOR,FORCE_COLOR,TERM,CI,NODE_ENV"
+# https://github.com/unjs/std-env/blob/7e8cb7b1000f313a03d7645c82e2d8608c250dd6/src/providers.ts#L60
+allowEnvs="${allowEnvs},APPVEYOR,AWS_APP_ID,SYSTEM_TEAMFOUNDATIONCOLLECTIONURI,INPUT_AZURE_STATIC_WEB_APPS_API_TOKEN,AC_APPCIRCLE,bamboo_planKey,BITBUCKET_COMMIT,BITRISE_IO,BUDDY_WORKSPACE_ID,BUILDKITE,CIRCLECI,CIRRUS_CI,CF_PAGES,WORKERS_CI,CODEBUILD_BUILD_ARN,CF_BUILD_ID,DRONE,DRONE_BUILD_EVENT,DSARI,GITHUB_ACTIONS,GITLAB_CI,CI_MERGE_REQUEST_ID,GO_PIPELINE_LABEL,LAYERCI,HUDSON_URL,JENKINS_URL,MAGNUM,NETLIFY,NETLIFY_LOCAL,NEVERCODE,RENDER,SAILCI,SEMAPHORE,SCREWDRIVER,SHIPPABLE,TDDIUM,STRIDER,TEAMCITY_VERSION,TRAVIS,NOW_BUILDER,VERCEL,VERCEL_ENV,APPCENTER_BUILD_ID,CODESANDBOX_SSE,CODESANDBOX_HOST,STACKBLITZ,STORMKIT,CLEAVR,ZEABUR,CODESPHERE_APP_ID,RAILWAY_PROJECT_ID,RAILWAY_SERVICE_ID,DENO_DEPLOYMENT_ID,FIREBASE_APP_HOSTING"
+# https://github.com/unjs/consola/blob/5ac9ed76b021c9ffc768f0727355238056aabeb1/src/basic.ts#L19
+allowEnvs="${allowEnvs},CONSOLA_LEVEL"
+# https://github.com/sindresorhus/is-unicode-supported/blob/e0373335038856c63034c8eef6ac43ee3827a601/index.js#L5
+allowEnvs="${allowEnvs},TERM_PROGRAM"
+# https://github.com/sindresorhus/xdg-basedir/blob/8cceade858e4da18cb971bf1844f086e9e213563/index.js
+allowEnvs="${allowEnvs},XDG_DATA_HOME,XDG_CONFIG_HOME,XDG_STATE_HOME,XDG_CACHE_HOME,XDG_RUNTIME_DIR,XDG_DATA_DIRS,XDG_CONFIG_DIRS"
+# https://github.com/privatenumber/fs-fixture/blob/ec8c2b2c110bb0dff58c956f0f8ddb024582d74b/src/utils/temporary-directory.ts
+allowEnvs="${allowEnvs},TMPDIR,TMP,TEMP"
+# https://github.com/ryoppippi/ccusage/blob/99ef249a1642b722268602e26522a7f2a8c9465b/src/_consts.ts#L68C14-L68C36
+# https://github.com/ryoppippi/ccusage/blob/99ef249a1642b722268602e26522a7f2a8c9465b/src/_utils.ts#L120
+allowEnvs="${allowEnvs},CLAUDE_CONFIG_DIR,COLUMNS"
+# https://github.com/SuperchupuDev/tinyglobby/blob/b73f79b5ea8a8e031014833ba02bf67a64d5af31/src/index.ts#L177
+allowEnvs="${allowEnvs},TINYGLOBBY_DEBUG"
+# https://github.com/chalk/supports-color/blob/ae809ecabd5965d0685e7fc121efe98c47ad8724/index.js#L151
+allowEnvs="${allowEnvs},TERM_PROGRAM_VERSION"
+
+deno run \
+  --allow-env="$allowEnvs" \
+  --allow-read="/tmp,$HOME/.config/claude,$HOME/.claude" \
+  --allow-sys="homedir" \
+  --allow-net="raw.githubusercontent.com:443" \
+  npm:ccusage@latest 
