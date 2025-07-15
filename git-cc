@@ -45,6 +45,8 @@ try {
 
 - Output the appropriate branch name for the following changes.
 - If the change content can be used as is for the branch name, simply convert it according to the general branch naming rules.
+- Make branch names concise, descriptive, and distinctive.
+  - If the branch name is too generic and may conflict with future work, add a timestamp (YYYYMMDDhhmm) to the end of the name.
 - Only respond with the message and no affirmation
 
 ## Changes
