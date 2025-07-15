@@ -1,0 +1,67 @@
+#!/usr/bin/env node
+
+// Checkout or create a branch
+
+const { execSync, exec } = require('child_process');
+
+try {
+  const lines = execSync("git branch --all --format '%(refname:short) %(refname)'").toString().trim().split('\n')
+
+  const localBranches = lines.flatMap(line => {
+    const [short, ref] = line.split(' ');
+    if (ref.startsWith('refs/remotes/')) {
+      return []
+    } else {
+      return [short]
+    }
+  })
+
+  const remoteBranches = lines.flatMap(line => {
+    const [short, ref] = line.split(' ');
+    if (ref.startsWith('refs/remotes/') && !ref.endsWith('/HEAD')) {
+      const [, local] = short.split(/\/(.*)/)
+      if (localBranches.includes(local)) {
+        return []
+      } else {
+        return short
+      }
+    } else {
+      return []
+    }
+  })
+
+  const branches = localBranches.concat(remoteBranches)
+
+  exec(`echo "${branches.join('\n')}" | fzf --print-query`, (err, stdout, stderr) => {
+    if (stdout.length > 0) {
+     const selectedBranch = stdout.toString().trim()
+      if (localBranches.includes(selectedBranch)) {
+        execSync(`git checkout ${selectedBranch}`)
+      } else if (remoteBranches.includes(selectedBranch)) {
+        const [remote, local] = selectedBranch.split(/\/(.*)/)
+        execSync(`git checkout -b ${local} ${remote}/${local}`)
+      } else {
+        const prompt = `# Output branch name
+
+- Output the appropriate branch name for the following changes.
+- If the change content can be used as is for the branch name, simply convert it according to the general branch naming rules.
+- Only respond with the message and no affirmation
+
+## Changes
+
+${selectedBranch.replace('ai:', '')}
+`
+        const branch = execSync(`claude --model sonnet -p "${prompt}"`).toString().trim()
+        execSync(`git checkout -b ${branch}`)
+      }
+    }
+  })
+} catch(e) {
+  if ('status' in e && 'stdout' in e && 'stderr' in e) {
+    console.error('status:', e.status)
+    console.error('stdout:' + e.stdout.toString() + 'stderr:', e.stderr.toString())
+  } else {
+    console.error(e)
+  }
+  process.exit(1)
+}
