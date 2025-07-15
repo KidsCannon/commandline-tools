@@ -34,12 +34,14 @@ try {
 
   exec(`echo "${branches.join('\n')}" | fzf --print-query`, (err, stdout, stderr) => {
     if (stdout.length > 0) {
-     const selectedBranch = stdout.toString().trim()
-      if (localBranches.includes(selectedBranch)) {
-        execSync(`git checkout ${selectedBranch}`)
-      } else if (remoteBranches.includes(selectedBranch)) {
-        const [remote, local] = selectedBranch.split(/\/(.*)/)
-        execSync(`git checkout -b ${local} ${remote}/${local}`)
+     let [query, selectedBranch] = stdout.toString().split('\n').map(x => x.trim())
+     if (selectedBranch != null && selectedBranch !== '') {
+        if (localBranches.includes(selectedBranch)) {
+          execSync(`git checkout ${selectedBranch}`)
+        } else if (remoteBranches.includes(selectedBranch)) {
+          const [remote, local] = selectedBranch.split(/\/(.*)/)
+          execSync(`git checkout -b ${local} ${remote}/${local}`)
+        }
       } else {
         const prompt = `# Output branch name
 
@@ -51,7 +53,7 @@ try {
 
 ## Changes
 
-${selectedBranch.replace('ai:', '')}
+${query.replace('ai:', '')}
 `
         const branch = execSync(`claude --model sonnet -p "${prompt}"`).toString().trim()
         execSync(`git checkout -b ${branch}`)
