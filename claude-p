@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [ -z "$DEBUG" ]; then
+if [ -n "$DEBUG" ]; then
   claude \
     --debug \
     --permission-mode acceptEdits \
