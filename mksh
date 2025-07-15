@@ -2,7 +2,14 @@
 
 set -e
 
-touch "$1"
-chmod +x "$1"
-echo "#!/bin/sh" >> $1
-$EDITOR $1
+if [ ! -f "$1" ]; then
+    touch "$1"
+    chmod +x "$1"
+    echo "#!/bin/sh" >> $1
+fi
+
+if [ "$NAME" = "Cursor" ]; then
+    cursor $1
+else
+    $EDITOR $1
+fi
