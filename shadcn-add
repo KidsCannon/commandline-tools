@@ -1,0 +1,22 @@
+#!/bin/sh
+
+# USAGE: $ shadcn-add button
+
+set -ex
+
+runner=
+if [ -f "pnpm-lock.yaml" ]; then
+  runner="pnpm dlx"
+elif [ -f "bun.lockb" ]; then
+  runner="bunx"
+elif [ -f "package-lock.json" ]; then
+  runner="npx"
+else
+  echo "No package manager found"
+  exit 1
+fi
+
+$runner shadcn@latest add "$1"
+if git grep 'import {.*} from "radix-ui"' > /dev/null; then
+  $runner shadcn@latest migrate radix
+fi
