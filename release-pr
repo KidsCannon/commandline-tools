@@ -1,5 +1,12 @@
 #!/bin/sh
 
+# USAGE
+#   $ release-pr <base> <head>
+# EXAMPLE
+#   $ release-pr main feature/a
+#   $ release-pr develop feature/a
+#   $ release-pr release develop
+
 base="$1"
 head="$2"
 
@@ -10,10 +17,12 @@ if [ -z "$base" ] || [ -z "$head" ]; then
   exit 1
 fi
 
-## dev -> prod の場合、dev に含まれる Release PR はざっくり無視する
+## リリース系ブランチ同士の Pull Request (例えば dev -> prod) の場合は、Release PR を大まかに無視する
 
 date="$(date +"%Y/%m/%d")"
 git fetch origin
 gh pr create --title "${base^} Release $date" --base $base --head $head --body "## Merge commits ($base..$head)
 
-$(git log "origin/$base..origin/$head" --merges --format="%h___%s___%b" | grep -v "${head^} Release" | awk -F___ '{print $2}')"
+$(git log "origin/$base..origin/$head" --merges --format="%h___%s  (Author: %an)___%b" | grep 'Merge pull request' | grep -v "${head^} Release" | awk -F___ '{print $2}')"
+
+gh pr view --web "$head"
